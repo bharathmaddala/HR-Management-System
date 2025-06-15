@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 // Define base URL for your API Gateway endpoints
 // Replace with your actual API Gateway endpoint once deployed
-const API_BASE_URL = 'https://your-api-gateway-id.execute-api.your-region.amazonaws.com/prod'; // Example
+const API_BASE_URL = 'https://l4fi5f9bxk.execute-api.us-east-1.amazonaws.com/prod'; // Example
 
 // App Component
 const App = () => {
