@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="HRMS Portal for F13 Tech - Employee Management Solution"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Custom Title for the HRMS Portal -->
+    <title>HRMS Portal - F13 Tech</title>
+
+    <!-- Inter font from Google Fonts - Essential for designed typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN - Crucial for styling the application -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Styles (if any, though Tailwind generally covers most) -->
+    <style>
+      /* This custom style block is for specific Tailwind extensions or overrides */
+      /* It ensures the Inter font is applied globally */
+      body {
+          font-family: 'Inter', sans-serif;
+          scroll-behavior: smooth; /* Smooth scrolling for anchor links within sections */
+      }
+      /* Custom background for the header to match premium design */
+      .header-bg {
+          background-color: #1a237e; /* Darker blue for a more premium header */
+      }
+      /* Styling for active navigation links (Tailwind classes applied via JS) */
+      .nav-link-active {
+          background-color: #3f51b5; /* Slightly lighter active state */
+          color: white;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Stronger shadow for active state */
+      }
+      /* Optional: Custom scrollbar for a cleaner look */
+      ::-webkit-scrollbar {
+          width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+          background: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      The build step will place the bundled React scripts into the <body> tag.
+      Do not directly import App.js or other React components here.
+    -->
+  </body>
+</html>

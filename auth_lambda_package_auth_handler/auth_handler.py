@@ -75,5 +75,52 @@ def login_user(event, context):
     except Exception as e:
         print(f"Login error: {e}")
         return get_response(500, {'message': f'Internal server error: {str(e)}'})
+    
+def confirm_signup(event, context):
+    """Lambda function to confirm user signup with a verification code."""
+    try:
+        body = json.loads(event['body'])
+        email = body['email']
+        code = body['code']
 
+        # Call Cognito User Pool to confirm the user's account
+        cognito_client.confirm_sign_up(
+            ClientId=COGNITO_CLIENT_ID,
+            Username=email,
+            ConfirmationCode=code
+        )
+        return get_response(200, {'message': 'Account confirmed successfully!'})
+
+    except cognito_client.exceptions.UserNotFoundException:
+        return get_response(400, {'message': 'User not found. Please sign up again.'})
+    except cognito_client.exceptions.CodeMismatchException:
+        return get_response(400, {'message': 'Invalid verification code. Please try again.'})
+    except cognito_client.exceptions.ExpiredCodeException:
+        return get_response(400, {'message': 'Verification code expired. Please request a new one.'})
+    except cognito_client.exceptions.NotAuthorizedException:
+        return get_response(400, {'message': 'User is already confirmed or not authorized.'}) # Can happen if user tries to confirm confirmed account
+    except Exception as e:
+        print(f"Confirm signup error: {e}")
+        return get_response(500, {'message': f'Internal server error: {str(e)}'})
+
+def resend_code(event, context):
+    """Lambda function to resend a verification code to the user."""
+    try:
+        body = json.loads(event['body'])
+        email = body['email']
+
+        # Call Cognito User Pool to resend the confirmation code
+        cognito_client.resend_confirmation_code(
+            ClientId=COGNITO_CLIENT_ID,
+            Username=email
+        )
+        return get_response(200, {'message': 'Verification code resent successfully!'})
+
+    except cognito_client.exceptions.UserNotFoundException:
+        return get_response(400, {'message': 'User not found. Please sign up again.'})
+    except cognito_client.exceptions.LimitExceededException:
+        return get_response(400, {'message': 'Attempt limit exceeded, please try again later.'})
+    except Exception as e:
+        print(f"Resend code error: {e}")
+        return get_response(500, {'message': f'Internal server error: {str(e)}'})
 # You would map /auth/signup to register_user and /auth/login to login_user
