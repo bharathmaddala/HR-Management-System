@@ -32,19 +32,30 @@ def get_response(status_code, body):
     }
 
 def get_user_id_from_event(event):
-    """Extracts user ID from API Gateway event (e.g., from Cognito authorizer)."""
-    # In a real setup, API Gateway with Cognito authorizer would put user info here:
-    # event['requestContext']['authorizer']['claims']['sub']
-    # For now, we'll assume userId is passed in the body/query string for simplicity
-    # or handle it based on event structure
+    """
+    Extracts user ID from API Gateway event.
+    Prioritizes Cognito Authorizer (for authenticated routes),
+    then checks JSON body (for POST/PUT), then query string (for GET).
+    """
+    
     if 'requestContext' in event and 'authorizer' in event['requestContext'] and 'claims' in event['requestContext']['authorizer']:
-        return event['requestContext']['authorizer']['claims'].get('sub') # Cognito user ID
-    if 'queryStringParameters' in event and 'userId' in event['queryStringParameters']:
-        return event['queryStringParameters']['userId']
-    if 'body' in event:
+        cognito_sub = event['requestContext']['authorizer']['claims'].get('sub')
+        if cognito_sub:
+            return cognito_sub
+
+    if 'body' in event and event['body']:
         try:
             body = json.loads(event['body'])
-            return body.get('userId')
+            user_id_from_body = body.get('userId')
+            if user_id_from_body:
+                return user_id_from_body
         except json.JSONDecodeError:
-            pass
-    return None # Or handle unauthorized access
+            pass 
+
+    if 'queryStringParameters' in event and event['queryStringParameters']: 
+        user_id_from_query = event['queryStringParameters'].get('userId')
+        if user_id_from_query:
+            return user_id_from_query
+
+    print(f"Warning: userId not found in event: {event}")
+    return None # Return None if userId cannot be determined
