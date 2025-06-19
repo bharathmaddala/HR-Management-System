@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 18  # Adjust as needed
+      nodejs: 18
     commands:
       - echo Installing dependencies...
       - npm install -g npm@latest
@@ -13,61 +13,14 @@ phases:
       - echo Starting pre-build phase...
       - echo "Current directory structure:"
       - ls -la
-      
-      # APPROACH 1: Skip frontend if it doesn't exist
-      - echo "Checking if frontend directory exists..."
-      - if [ -d "frontend" ]; then
-          echo "Frontend directory exists, proceeding with frontend build";
-          cd frontend;
-          npm install;
-          cd ..;
-        else
-          echo "Frontend directory does not exist, skipping frontend build";
-        fi
-      
-      # APPROACH 2: Handle backend build
-      - echo "Checking if backend directory exists..."
-      - if [ -d "backend" ]; then
-          echo "Backend directory exists, proceeding with backend build";
-          cd backend;
-          npm install;
-          cd ..;
-        else
-          echo "Backend directory does not exist";
-        fi
-      
-      # APPROACH 3: Handle root-level build if no separate directories
-      - echo "Checking for package.json in root directory..."
-      - if [ -f "package.json" ] && [ ! -d "frontend" ] && [ ! -d "backend" ]; then
-          echo "Found package.json in root directory, installing dependencies";
-          npm install;
-        fi
+      # Install dependencies at the root level
+      - if [ -f "package.json" ]; then npm install; fi
 
   build:
     commands:
       - echo Starting build phase...
-      
-      # Build frontend if it exists
-      - if [ -d "frontend" ]; then
-          echo "Building frontend...";
-          cd frontend;
-          npm run build || echo "Frontend build command failed but continuing";
-          cd ..;
-        fi
-      
-      # Build backend if it exists
-      - if [ -d "backend" ]; then
-          echo "Building backend...";
-          cd backend;
-          npm run build || echo "Backend build command failed but continuing";
-          cd ..;
-        fi
-      
-      # Build at root level if no separate directories
-      - if [ -f "package.json" ] && [ ! -d "frontend" ] && [ ! -d "backend" ]; then
-          echo "Building at root level...";
-          npm run build || echo "Root level build command failed but continuing";
-        fi
+      # Build at root level
+      - if [ -f "package.json" ]; then npm run build || echo "Build command failed but continuing"; fi
 
   post_build:
     commands:
@@ -75,27 +28,11 @@ phases:
 
 artifacts:
   files:
-    # Include all files from frontend build output if it exists
-    - frontend/build/**/* 
-    - frontend/dist/**/*
-    # Include all files from backend build output if it exists
-    - backend/build/**/*
-    - backend/dist/**/*
-    # Include root-level build output if no separate directories
-    - build/**/*
-    - dist/**/*
-    # Include deployment files
-    - appspec.yml
-    - scripts/**/*
-    # Include any other necessary files
-    - package.json
-    - package-lock.json
-    - node_modules/**/*
+    # Include all files
+    - '**/*'
   discard-paths: no
   base-directory: '.'
 
 cache:
   paths:
     - 'node_modules/**/*'
-    - 'frontend/node_modules/**/*'
-    - 'backend/node_modules/**/*'
