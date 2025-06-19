@@ -5,7 +5,7 @@ Parameters:
   S3DocumentsBucketName:
     Type: String
     Description: Name of the S3 bucket for document storage
-    Default: hrms-document-storage-bucket
+    Default: hrms-storage-bucket-for-documents
   
   CognitoUserPoolId:
     Type: String
