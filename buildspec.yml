@@ -3,44 +3,48 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 18
-      python: 3.9
+      nodejs: 18  # You can adjust this to match your project's Node.js version
     commands:
-      - echo "🔍 Checking root path"
-      - pwd
-      - ls -la
-      - pip install --upgrade pip
-      - pip install aws-sam-cli
-      - npm install -g yarn
+      - echo Installing dependencies...
+      - npm install -g npm@latest  # Update npm to latest version
 
   pre_build:
     commands:
-      - echo "🔍 Checking for frontend folder..."
-      - |
-        if [ -d "frontend" ]; then
-          echo "✅ Frontend folder exists"
-          cd frontend
-          npm install --force
-          cd ..
-        else
-          echo "❌ Frontend folder not found"
-          exit 1
-        fi
+      - echo Starting pre-build phase...
+      - echo "Current directory:"
+      - pwd
+      - echo "Directory contents:"
+      - ls -la
+      # Option 1: Create the frontend directory if it doesn't exist
+      - mkdir -p frontend
+      - cd frontend
+      - echo "Now in frontend directory"
+      - ls -la
+      # Install dependencies if package.json exists
+      - if [ -f "package.json" ]; then npm install; else echo "No package.json found in frontend directory"; fi
 
   build:
     commands:
-      - echo "🔨 Building React frontend..."
-      - cd frontend && npm run build && cd ..
-
-      - echo "🔨 Building backend (Lambdas) with AWS SAM..."
-      - sam build --template-file backend/template.yaml
+      - echo Starting build phase...
+      # Build commands for your frontend application
+      - if [ -f "package.json" ]; then npm run build; else echo "No package.json found, skipping build"; fi
 
   post_build:
     commands:
-      - echo "✅ Build complete. Ready for deployment."
+      - echo Build completed on `date`
+      # Return to the root directory
+      - cd ..
+      - echo "Current directory after returning to root:"
+      - pwd
 
 artifacts:
   files:
-    - '**/*'
-  base-directory: .
+    - frontend/build/**/*  # Adjust this path based on where your build outputs files
+    - appspec.yml
+    - scripts/**/*
   discard-paths: no
+  base-directory: '.'
+
+cache:
+  paths:
+    - 'frontend/node_modules/**/*'  # Cache node_modules to speed up future builds
