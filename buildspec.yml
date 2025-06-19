@@ -12,19 +12,21 @@ phases:
       - npm install -g yarn
 
   pre_build:
-  commands:
-    - echo "Checking current directory before frontend install:"
-    - pwd
-    - ls -la
-    - echo "Navigating to frontend and installing dependencies..."
-    - cd frontend || (echo "frontend directory not found!" && exit 1)
-    - npm install --force
-    - cd ..
+    commands:
+      - echo "Checking current directory before frontend install:"
+      - pwd
+      - ls -la
+      - echo "Navigating to frontend and installing dependencies..."
+      - cd frontend || (echo "frontend directory not found!" && exit 1)
+      - npm install --force
+      - cd ..
 
   build:
     commands:
       - echo "Building React frontend..."
+      - cd frontend
       - npm run build
+      - cd ..
 
       - echo "Building backend (Lambdas) with AWS SAM..."
       - sam build --template-file backend/template.yaml
