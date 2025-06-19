@@ -598,7 +598,7 @@ const App = () => {
             {!isLoggedIn && (
                 <div id="auth-container" className="min-h-screen flex items-center justify-center bg-gray-100">
                     <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-                        <h2 className="text-3xl font-bold text-center text-blue-800 mb-6">Welcome to F13 Tech HRMS</h2>
+                        <h2 className="text-3xl font-bold text-center text-blue-800 mb-6">Welcome to F13 Tech HR Management System</h2>
                         <p className="text-center text-gray-600 mb-8" id="auth-tagline">
                             {showVerificationForm ? 'Enter the verification code sent to your email.' : (showSignup ? 'Create your account to get started.' : 'Please login to access the portal.')}
                         </p>
