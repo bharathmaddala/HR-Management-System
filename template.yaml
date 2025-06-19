@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'HR Management System Backend Resources'
+
+Parameters:
+  S3DocumentsBucketName:
+    Type: String
+    Description: Name of the S3 bucket for document storage
+    Default: hrms-document-storage-bucket
+  
+  CognitoUserPoolId:
+    Type: String
+    Description: ID of the Cognito User Pool
+    Default: us-east-1_dshoL8wrB
+  
+  CognitoAppClientId:
+    Type: String
+    Description: ID of the Cognito App Client
+    Default: 6uvfbks36bdpqoiqetb4r1glhk
+
+Resources:
+  # Define your backend resources here
+  # For example:
+  DocumentsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3DocumentsBucketName
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [GET, PUT, POST, DELETE]
+            AllowedOrigins: ['*']
+            MaxAge: 3000
+
+Outputs:
+  DocumentsBucketName:
+    Description: Name of the S3 bucket for document storage
+    Value: !Ref DocumentsBucket
