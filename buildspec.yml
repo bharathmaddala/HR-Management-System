@@ -1,35 +1,27 @@
-# buildspec.yml
 version: 0.2
 
 phases:
   install:
     runtime-versions:
-      nodejs: 18 # Use a Node.js version compatible with your React app
-      python: 3.9 # Use a Python version compatible with your Lambdas
+      nodejs: 18
+      python: 3.9
     commands:
       - echo "Installing dependencies..."
-      # Install AWS SAM CLI for building and deploying serverless applications
       - pip install --upgrade pip
       - pip install aws-sam-cli
-      # Install Yarn (optional, if you use yarn instead of npm)
       - npm install -g yarn
 
   pre_build:
     commands:
-      - echo "Navigating to frontend and installing dependencies..."
-      - cd frontend/
-      - npm install --force # Use --force to resolve any dependency conflicts if they arise
-      - cd .. # Go back to repo root
+      - echo "Installing frontend dependencies at root..."
+      - npm install --force
 
   build:
     commands:
       - echo "Building React frontend..."
-      - cd frontend/
-      - npm run build # This command creates the 'build' folder
-      - cd .. # Go back to repo root
+      - npm run build
 
       - echo "Building backend (Lambdas) with AWS SAM..."
-      # `sam build` takes your template.yaml and zips/prepares your Lambda code
       - sam build --template-file backend/template.yaml
 
   post_build:
@@ -38,6 +30,6 @@ phases:
 
 artifacts:
   files:
-    - '**/*' # Include all files generated during build phase
-  base-directory: . # Artifacts are relative to the CodeBuild project root
-  discard-paths: no # Keep the directory structure
+    - '**/*'
+  base-directory: .
+  discard-paths: no
