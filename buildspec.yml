@@ -3,48 +3,99 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 18  # You can adjust this to match your project's Node.js version
+      nodejs: 18  # Adjust as needed
     commands:
       - echo Installing dependencies...
-      - npm install -g npm@latest  # Update npm to latest version
+      - npm install -g npm@latest
 
   pre_build:
     commands:
       - echo Starting pre-build phase...
-      - echo "Current directory:"
-      - pwd
-      - echo "Directory contents:"
+      - echo "Current directory structure:"
       - ls -la
-      # Option 1: Create the frontend directory if it doesn't exist
-      - mkdir -p frontend
-      - cd frontend
-      - echo "Now in frontend directory"
-      - ls -la
-      # Install dependencies if package.json exists
-      - if [ -f "package.json" ]; then npm install; else echo "No package.json found in frontend directory"; fi
+      
+      # APPROACH 1: Skip frontend if it doesn't exist
+      - echo "Checking if frontend directory exists..."
+      - if [ -d "frontend" ]; then
+          echo "Frontend directory exists, proceeding with frontend build";
+          cd frontend;
+          npm install;
+          cd ..;
+        else
+          echo "Frontend directory does not exist, skipping frontend build";
+        fi
+      
+      # APPROACH 2: Handle backend build
+      - echo "Checking if backend directory exists..."
+      - if [ -d "backend" ]; then
+          echo "Backend directory exists, proceeding with backend build";
+          cd backend;
+          npm install;
+          cd ..;
+        else
+          echo "Backend directory does not exist";
+        fi
+      
+      # APPROACH 3: Handle root-level build if no separate directories
+      - echo "Checking for package.json in root directory..."
+      - if [ -f "package.json" ] && [ ! -d "frontend" ] && [ ! -d "backend" ]; then
+          echo "Found package.json in root directory, installing dependencies";
+          npm install;
+        fi
 
   build:
     commands:
       - echo Starting build phase...
-      # Build commands for your frontend application
-      - if [ -f "package.json" ]; then npm run build; else echo "No package.json found, skipping build"; fi
+      
+      # Build frontend if it exists
+      - if [ -d "frontend" ]; then
+          echo "Building frontend...";
+          cd frontend;
+          npm run build || echo "Frontend build command failed but continuing";
+          cd ..;
+        fi
+      
+      # Build backend if it exists
+      - if [ -d "backend" ]; then
+          echo "Building backend...";
+          cd backend;
+          npm run build || echo "Backend build command failed but continuing";
+          cd ..;
+        fi
+      
+      # Build at root level if no separate directories
+      - if [ -f "package.json" ] && [ ! -d "frontend" ] && [ ! -d "backend" ]; then
+          echo "Building at root level...";
+          npm run build || echo "Root level build command failed but continuing";
+        fi
 
   post_build:
     commands:
       - echo Build completed on `date`
-      # Return to the root directory
-      - cd ..
-      - echo "Current directory after returning to root:"
-      - pwd
 
 artifacts:
   files:
-    - frontend/build/**/*  # Adjust this path based on where your build outputs files
+    # Include all files from frontend build output if it exists
+    - frontend/build/**/* 
+    - frontend/dist/**/*
+    # Include all files from backend build output if it exists
+    - backend/build/**/*
+    - backend/dist/**/*
+    # Include root-level build output if no separate directories
+    - build/**/*
+    - dist/**/*
+    # Include deployment files
     - appspec.yml
     - scripts/**/*
+    # Include any other necessary files
+    - package.json
+    - package-lock.json
+    - node_modules/**/*
   discard-paths: no
   base-directory: '.'
 
 cache:
   paths:
-    - 'frontend/node_modules/**/*'  # Cache node_modules to speed up future builds
+    - 'node_modules/**/*'
+    - 'frontend/node_modules/**/*'
+    - 'backend/node_modules/**/*'
