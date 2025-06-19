@@ -739,7 +739,7 @@ const App = () => {
                 <div id="portal-container" className="container mx-auto p-4 md:p-8">
                     {/* Header Section */}
                     <header className="header-bg text-white py-6 md:py-8 px-6 rounded-2xl shadow-xl mb-8 text-center relative">
-                        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">F13 Tech HRMS Portal</h1>
+                        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">F13 Tech HR Management Portal</h1>
                         <p className="text-md md:text-lg opacity-90 mt-2">Empowering our team with seamless HR solutions.</p>
                         {/* Display User ID for debugging/identification */}
                         <p className="text-xs absolute top-4 left-4 opacity-70">
