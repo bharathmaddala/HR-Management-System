@@ -80,7 +80,7 @@ const App = () => {
             try {
                 // Fetch Profile Data
                 const profileResponse = await fetch(`${API_BASE_URL}/profile?userId=${userId}`, {
-                    headers: { /* 'Authorization': `Bearer ${userToken}` */ } // In real app, include auth token
+                    headers: { 'Authorization': `Bearer ${userToken}` } // In real app, include auth token
                 });
                 if (profileResponse.ok) {
                     const data = await profileResponse.json();
@@ -93,7 +93,7 @@ const App = () => {
 
                 // Fetch Leaves Data
                 const leavesResponse = await fetch(`${API_BASE_URL}/leaves?userId=${userId}`, {
-                    headers: { /* 'Authorization': `Bearer ${userToken}` */ }
+                    headers: { 'Authorization': `Bearer ${userToken}` }
                 });
                 if (leavesResponse.ok) {
                     const data = await leavesResponse.json();
@@ -106,7 +106,7 @@ const App = () => {
 
                 // Fetch Feedback Data
                 const feedbackResponse = await fetch(`${API_BASE_URL}/feedback?userId=${userId}`, {
-                    headers: { /* 'Authorization': `Bearer ${userToken}` */ }
+                    headers: { 'Authorization': `Bearer ${userToken}` }
                 });
                 if (feedbackResponse.ok) {
                     const data = await feedbackResponse.json();
@@ -119,7 +119,7 @@ const App = () => {
 
                 // Fetch Documents Metadata
                 const documentsResponse = await fetch(`${API_BASE_URL}/documents?userId=${userId}`, {
-                    headers: { /* 'Authorization': `Bearer ${userToken}` */ }
+                    headers: { 'Authorization': `Bearer ${userToken}` }
                 });
                 if (documentsResponse.ok) {
                     const data = await documentsResponse.json();
